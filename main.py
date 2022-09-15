@@ -92,21 +92,23 @@ def runMecro():
     idListStr = idListStr.replace(" ", "")
     idList = idListStr.split(",")
 
+    isFirst = True
     for id in idList:
 
         # 첫 실행
-        if sendCount==0 :
+        if isFirst :
             setChrome('/Users/hyunjhan/Documents/xian_program_library/chromedriver')
             move('https://www.instagram.com/')
             login(username, password)
-            sendCount+=1 # 1회 끝
+            isFirst = not isFirst # 1회 끝
 
         print(f"전송 중인 계정 : {id}")
         url = 'https://www.instagram.com/' + id  # 메시지 보낼 인스타 아이디
         move(url)
         result = sendMessage(id, f"매크로 작동 {sendCount}")
         if result == 0 :
-            # 실패
+            # 실패 - 코드가 완전히 멈춤
+            print("!!!!!!!!!!!!!!!!!!!!!오류 확인하세요!!!!!!!!!!!!!!!!!!")
             break
         elif result == 1 :
             # 성공
@@ -115,8 +117,9 @@ def runMecro():
             # 비공개 계정
             secretIdCount += 1
 
-    print(f"전송한 메일 수 : {sendCount - secretIdCount}")
+    print(f"전송 시도한 총 계정 수 : {len(idList)}")
     print(f"비공개 계정으로 실패 : {secretIdCount}")
+    print(f"전송 성공한 계정 수 : {sendCount}")
     file.closed
     # chrome2.close()
 
